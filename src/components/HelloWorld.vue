@@ -6,30 +6,12 @@
       check out the
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
     </p>
-    <h3 class="font-bold mt-4">Installed CLI Plugins</h3>
-    <ul class="flex flex-row space-x-2">
-      <li class="flex-initial"><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li class="flex-initial"><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li class="flex-initial"><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li class="flex-initial"><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-      <li class="flex-initial"><a href="https://github.com/forsartis/vue-cli-plugin-tailwind" target="_blank" rel="noopener">tailwind</a></li>
-    </ul>
-    <h3 class="font-bold mt-4">Essential Links</h3>
-    <ul  class="flex flex-row space-x-2">
-      <li class="flex-initial"><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li class="flex-initial"><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li class="flex-initial"><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li class="flex-initial"><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li class="flex-initial"><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3 class="font-bold mt-4">Ecosystem</h3>
-    <ul  class="flex flex-row space-x-2">
-      <li class="flex-initial"><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li class="flex-initial"><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li class="flex-initial"><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li class="flex-initial"><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li class="flex-initial"><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <div v-for="group in groups" :key="group.title">
+      <h3 class="font-bold mt-4">{{ group.title }}</h3>
+      <ul class="flex flex-row space-x-2">
+        <FlexRefItem v-for="item in group.items" :key="item.text" :link="item.link" :text="item.text" />
+      </ul>
+    </div>
     <p class="invisible">black line</p>
     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
       按钮
@@ -38,10 +20,50 @@
 </template>
 
 <script>
+import FlexRefItem from '@/components/FlexRefItem.vue'
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data () {
+    return {
+      groups: [
+        {
+          title: 'Installed CLI Plugins',
+          items: [
+            { link: 'https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel', text: 'babel' },
+            { link: 'https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router', text: 'router' },
+            { link: 'https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex', text: 'vuex' },
+            { link: 'https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint', text: 'eslint' },
+            { link: 'https://github.com/forsartis/vue-cli-plugin-tailwind', text: 'tailwind' }
+          ]
+        },
+        {
+          title: 'Essential Links',
+          items: [
+            { link: 'https://vuejs.org', text: 'Core Docs' },
+            { link: 'https://forum.vuejs.org', text: 'Forum' },
+            { link: 'https://chat.vuejs.org', text: 'Community Chat' },
+            { link: 'https://twitter.com/vuejs', text: 'Twitter' },
+            { link: 'https://news.vuejs.org', text: 'News' }
+          ]
+        },
+        {
+          title: 'Ecosystem',
+          items: [
+            { link: 'https://router.vuejs.org', text: 'vue-router' },
+            { link: 'https://vuex.vuejs.org', text: 'vuex' },
+            { link: 'https://github.com/vuejs/vue-devtools#vue-devtools', text: 'vue-devtools' },
+            { link: 'https://vue-loader.vuejs.org', text: 'vue-loader' },
+            { link: 'https://github.com/vuejs/awesome-vue', text: 'awesome-vue' }
+          ]
+        }
+      ]
+    }
+  },
+  components: {
+    FlexRefItem
   }
 }
 </script>
