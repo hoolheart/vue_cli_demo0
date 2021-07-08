@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+// import axios from 'axios'
 import FlexRefItem from '@/components/FlexRefItem.vue'
 export default {
   name: 'HelloWorld',
@@ -33,7 +33,7 @@ export default {
   },
   mounted () {
     // console.info('try get help info')
-    Vue.http.get('/api/help').then(
+    this.$http.get('/api/help').then(
       response => {
         // console.info(response.body)
         this.groups = response.body
