@@ -28,9 +28,9 @@
     </div>
     <p class="h-2" />
     <div class="flex flex-row justify-center">
-      <button v-if="is_register" @click="register()" class="w-16 rounded-lg px-4 py-2 bg-blue-900 hover:bg-blue-600 text-center text-white font-bold">注册</button>
-      <button v-else-if="!user_info.IsLogIn" @click="log_in()" class="w-16 rounded-lg px-4 py-2 bg-blue-900 hover:bg-blue-600 text-center text-white font-bold">登录</button>
-      <button v-else @click="log_out()" class="w-16 rounded-lg px-4 py-2 bg-blue-900 hover:bg-blue-600 text-center text-white font-bold">退出</button>
+      <button v-if="is_register" @click="register()" class="w-16 rounded-lg px-2 py-2 bg-blue-900 hover:bg-blue-600 text-center text-white font-bold">注册</button>
+      <button v-else-if="!user_info.IsLogIn" @click="log_in()" class="w-16 rounded-lg px-2 py-2 bg-blue-900 hover:bg-blue-600 text-center text-white font-bold">登录</button>
+      <button v-else @click="log_out()" class="w-16 rounded-lg px-2 py-2 bg-blue-900 hover:bg-blue-600 text-center text-white font-bold">退出</button>
     </div>
   </div>
 </template>
@@ -55,19 +55,19 @@ export default ({
   },
   mounted () {
     if (this.user_info.IsLogIn) {
-      this.$http.get('/api/user/session', {
+      var xhr = new XMLHttpRequest()
+      xhr.withCredentials = false
+      xhr.onload(function () {
+        if (!xhr.responseText.result) {
+          this.log_out()
+        }
+      })
+      xhr.open('GET', '/api/user/session')
+      xhr.setRequestHeader('Content-Type', 'application/json')
+      xhr.setRequestHeader('Accept', 'application/json')
+      xhr.send(JSON.stringify({
         session_id: this.user_info.SessionID
-      }).then(
-        response => {
-          if (!response.body.result) {
-            this.log_out()
-          }
-        }
-      ).catch(
-        response => {
-          console.error(response)
-        }
-      )
+      }))
     }
   },
   methods: {
@@ -146,7 +146,12 @@ export default ({
     },
     log_out: function () {
       if (this.user_info.IsLogIn) {
-        this.$http.delete('/api/user/logout', JSON.stringify({
+        var xhr = new XMLHttpRequest()
+        xhr.withCredentials = false
+        xhr.open('DELETE', '/api/user/logout')
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.setRequestHeader('Accept', 'application/json')
+        xhr.send(JSON.stringify({
           session_id: this.user_info.SessionID
         }))
         this.$store.commit('LOG_OUT')
