@@ -21,6 +21,7 @@
 <script>
 // import axios from 'axios'
 import FlexRefItem from '@/components/FlexRefItem.vue'
+import { JsonGet } from '../assets/json_request'
 export default {
   name: 'HelloWorld',
   props: {
@@ -33,15 +34,7 @@ export default {
   },
   mounted () {
     // console.info('try get help info')
-    this.$http.get('/api/help').then(
-      response => {
-        // console.info(response.body)
-        this.groups = response.body
-      },
-      response => {
-        console.error(response)
-      }
-    )
+    JsonGet('/api/help', undefined, body => { this.groups = body }, error => { console.error(error.toString()) })
   },
   components: {
     FlexRefItem

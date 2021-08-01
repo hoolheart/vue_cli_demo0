@@ -37,6 +37,7 @@
 
 <script>
 import { CheckEmpty, ValidateEmail } from '../assets/commonutil'
+import { JsonGet, JsonPost, JsonDelete } from '../assets/json_request'
 
 export default ({
   name: 'Account',
@@ -55,19 +56,12 @@ export default ({
   },
   mounted () {
     if (this.user_info.IsLogIn) {
-      var xhr = new XMLHttpRequest()
-      xhr.withCredentials = false
-      xhr.onload(function () {
-        if (!xhr.responseText.result) {
+      var obj = { session_id: this.user_info.SessionID }
+      JsonGet('/api/user/session', obj, (echo) => {
+        if (!echo.result) {
           this.log_out()
         }
       })
-      xhr.open('GET', '/api/user/session')
-      xhr.setRequestHeader('Content-Type', 'application/json')
-      xhr.setRequestHeader('Accept', 'application/json')
-      xhr.send(JSON.stringify({
-        session_id: this.user_info.SessionID
-      }))
     }
   },
   methods: {
@@ -90,25 +84,20 @@ export default ({
         this.warn_info = '密码不一致'
       } else {
         this.warn_info = ''
-        this.$http.post('/api/user/user', JSON.stringify({
+        JsonPost('/api/user/user', {
           email: this.user_info.UserEmail,
           name: this.user_info.UserName,
           password: this.password
-        })).then(
-          response => {
-            var echo = response.body
-            if (echo.result) {
-              this.warn_info = '注册成功'
-              this.is_register = false
-            } else {
-              this.warn_info = '注册失败: ' + echo.error
-            }
+        }, echo => {
+          if (echo.result) {
+            this.warn_info = '注册成功'
+            this.is_register = false
+          } else {
+            this.warn_info = '注册失败: ' + echo.error
           }
-        ).catch(
-          error => {
-            this.warn_info = '未知错误: ' + error
-          }
-        )
+        }, error => {
+          this.warn_info = '未知错误: ' + error.toString()
+        })
       }
     },
     log_in: function () {
@@ -118,42 +107,32 @@ export default ({
         this.warn_info = '请输入密码'
       } else {
         this.warn_info = ''
-        this.$http.post('/api/user/login', JSON.stringify({
+        JsonPost('/api/user/login', {
           email: this.user_info.UserEmail,
           password: this.password
-        })).then(
-          response => {
-            var echo = response.body
-            if (echo.result) {
-              this.$store.commit('LOG_IN', {
-                user_id: echo.user.user_id,
-                session_id: echo.session.session_id,
-                email: echo.user.email,
-                user_name: echo.user.name
-              })
-              this.password = ''
-              this.warn_info = '登录成功'
-            } else {
-              this.warn_info = '登录失败: ' + echo.error
-            }
+        }, echo => {
+          if (echo.result) {
+            this.$store.commit('LOG_IN', {
+              user_id: echo.user.user_id,
+              session_id: echo.session.session_id,
+              email: echo.user.email,
+              user_name: echo.user.name
+            })
+            this.password = ''
+            this.warn_info = '登录成功'
+          } else {
+            this.warn_info = '登录失败: ' + echo.error
           }
-        ).catch(
-          error => {
-            this.warn_info = '未知错误: ' + error
-          }
-        )
+        }, error => {
+          this.warn_info = '未知错误: ' + error
+        })
       }
     },
     log_out: function () {
       if (this.user_info.IsLogIn) {
-        var xhr = new XMLHttpRequest()
-        xhr.withCredentials = false
-        xhr.open('DELETE', '/api/user/logout')
-        xhr.setRequestHeader('Content-Type', 'application/json')
-        xhr.setRequestHeader('Accept', 'application/json')
-        xhr.send(JSON.stringify({
+        JsonDelete('/api/user/logout', {
           session_id: this.user_info.SessionID
-        }))
+        })
         this.$store.commit('LOG_OUT')
         this.warn_info = '已退出'
       }
