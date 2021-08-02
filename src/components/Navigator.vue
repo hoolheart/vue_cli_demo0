@@ -15,6 +15,7 @@ export default {
     return {
       items: [
         { link: '/', text: '帮助' },
+        { link: '/table', text: '表格' },
         { link: '/about', text: '说明' }
       ]
     }

@@ -11,6 +11,8 @@
     "@tailwindcss/postcss7-compat": "^2.0.2",
     "autoprefixer": "^9",
     "core-js": "^3.6.5",
+    "fancy-grid-vue": "^1.0.6",
+    "fancygrid": "^1.7.151",
     "postcss": "^7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "vue": "^2.6.11",
